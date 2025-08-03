@@ -1,9 +1,15 @@
 package com.kpurcell.BeatDrop.api.users.service;
 
+import com.kpurcell.BeatDrop.api.users.controller.UserDataController;
 import com.kpurcell.BeatDrop.api.users.service.data.User;
 import com.kpurcell.BeatDrop.api.users.service.data.UserUpdateRequest;
-import com.kpurcell.BeatDrop.api.users.service.repository.UserDataRepository;
+import com.kpurcell.BeatDrop.api.users.service.exception.DuplicateEmailAddressException;
+import com.kpurcell.BeatDrop.api.users.service.exception.InvalidNewUserParametersException;
+import com.kpurcell.BeatDrop.repository.users.UserDataRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,8 +18,23 @@ import java.util.Optional;
 @Service
 public class UserDataService {
 
+    /* */
+    private static final Logger log = LogManager.getLogger(UserDataService.class);
+
+    /* */
+    private final UserDataRepository userDataRepository;
+
+    /* */
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private UserDataRepository userDataRepository;
+    UserDataService(
+            UserDataRepository userDataRepository,
+            PasswordEncoder passwordEncoder)
+    {
+        this.userDataRepository = userDataRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Optional<User> getMyUser(Long userId)
     {
@@ -29,15 +50,41 @@ public class UserDataService {
             String firstName,
             String lastName,
             LocalDate birthDate,
-            String emailAddress)
+            String emailAddress,
+            String password)
     {
-        User newUser = new User(
-                firstName,
-                lastName,
-                birthDate,
-                emailAddress);
+        if(validateUserInputs(firstName, lastName, birthDate, emailAddress, password))
+        {
+            if (userDataRepository.findByEmailAddress(emailAddress).isPresent())
+            {
+                throw new DuplicateEmailAddressException();
+            }
 
-        return userDataRepository.save(newUser);
+            User newUser = new User(
+                    firstName,
+                    lastName,
+                    birthDate,
+                    emailAddress,
+                    passwordEncoder.encode(password));
+
+            return userDataRepository.save(newUser);
+        }
+        throw new InvalidNewUserParametersException();
+    }
+
+    private boolean validateUserInputs(
+            String firstName,
+            String lastName,
+            LocalDate birthDate,
+            String emailAddress,
+            String password)
+    {
+        if(firstName.isEmpty() || lastName.isEmpty() || birthDate == null || emailAddress.isEmpty() || password.isEmpty() ||
+           firstName.isBlank() || lastName.isBlank() || emailAddress.isBlank() || password.isBlank())
+        {
+            return false;
+        }
+        return true;
     }
 
     public User updateRequiredFields(

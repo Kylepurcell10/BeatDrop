@@ -29,6 +29,9 @@ public class User {
     private String emailAddress;
 
     /* */
+    private String password;
+
+    /* */
     public User(){};
 
     /* */
@@ -36,49 +39,71 @@ public class User {
             String firstName,
             String lastName,
             LocalDate birthDate,
-            String emailAddress)
+            String emailAddress,
+            String password)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.emailAddress = emailAddress;
+        this.password = password;
     }
 
     /* */
-    public String getFirstName() {
+    public String getFirstName()
+    {
         return firstName;
     }
 
     /* */
-    public void setFirstName(String firstName) {
+    public void setFirstName(String firstName)
+    {
         this.firstName = firstName;
     }
 
     /* */
-    public String getLastName() {
+    public String getLastName()
+    {
         return lastName;
     }
 
     /* */
-    public void setLastName(String lastName) {
+    public void setLastName(String lastName)
+    {
         this.lastName = lastName;
     }
 
     /* */
-    public LocalDate getBirthDate() { return birthDate; }
+    public LocalDate getBirthDate()
+    {
+        return birthDate;
+    }
 
     /* */
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(LocalDate birthDate)
+    {
         this.birthDate = birthDate;
     }
 
     /* */
-    public String getEmailAddress() {
+    public String getEmailAddress()
+    {
         return emailAddress;
     }
 
     /* */
-    public void setEmailAddress(String emailAddress) {
+    public void setEmailAddress(String emailAddress)
+    {
         this.emailAddress = emailAddress;
+    }
+
+    public String getPassword()
+    {
+        return this.password;
+    }
+
+    public Long getId()
+    {
+        return id;
     }
 }

@@ -1,20 +1,31 @@
 package com.kpurcell.BeatDrop.api.auth.controller;
 
 import com.kpurcell.BeatDrop.api.auth.service.AuthService;
+import com.kpurcell.BeatDrop.api.auth.service.data.LoginRequest;
+import com.kpurcell.BeatDrop.api.users.service.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(path="/auth")
 public class AuthController
 {
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    @PostMapping(path = "/login")
-    public ResponseEntity<String, String>
+    @Autowired
+    public AuthController(AuthService authService)
+    {
+        this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest) {
+        String token = authService.authenticate(loginRequest.getEmailAddress(), loginRequest.getPassword());
+        return ResponseEntity.ok(Map.of("token", token));
+    }
 }

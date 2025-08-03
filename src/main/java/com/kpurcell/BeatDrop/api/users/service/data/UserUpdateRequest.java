@@ -6,68 +6,61 @@ public class UserUpdateRequest
 {
 
     /* */
-    private String firstName;
+    private final String firstName;
 
     /* */
-    private String lastName;
+    private final String lastName;
 
     /* */
-    private LocalDate birthDate;
+    private final LocalDate birthDate;
 
     /* */
-    private String emailAddress;
+    private final String emailAddress;
 
     /* */
-    public UserUpdateRequest(){};
+    private final String password;
 
     /* */
     public UserUpdateRequest(
             String firstName,
             String lastName,
             LocalDate birthDate,
-            String emailAddress)
+            String emailAddress,
+            String password)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.emailAddress = emailAddress;
+        this.password = password;
     }
 
     /* */
-    public String getFirstName() {
+    public String getFirstName()
+    {
         return firstName;
     }
 
     /* */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /* */
-    public String getLastName() {
+    public String getLastName()
+    {
         return lastName;
     }
 
     /* */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public LocalDate getBirthDate()
+    {
+        return birthDate;
     }
-
     /* */
-    public LocalDate getBirthDate() { return birthDate; }
-
-    /* */
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    /* */
-    public String getEmailAddress() {
+    public String getEmailAddress()
+    {
         return emailAddress;
     }
 
     /* */
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
+    public String getPassword()
+    {
+        return password;
+    };
 }
